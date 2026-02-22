@@ -1,0 +1,261 @@
+[
+    {
+        "id": "tab_emisor",
+        "type": "tab",
+        "label": "EMISOR: Simulación de Uplinks LoRaWAN",
+        "disabled": false,
+        "info": "Este flujo simula un dispositivo LoRaWAN enviando datos a través del Gateway.\nLos datos se publican en el topic que Gateway Bridge espera.\nDevEUI: 70B3D57ED005ABCD\nGateway ID: 2C7F71115310007"
+    },
+    {
+        "id": "inject_uplink",
+        "type": "inject",
+        "z": "tab_emisor",
+        "name": "🚀 Disparar Uplink",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 100,
+        "wires": [
+            [
+                "generar_uplink"
+            ]
+        ]
+    },
+    {
+        "id": "inject_uplink_auto",
+        "type": "inject",
+        "z": "tab_emisor",
+        "name": "⏱️ Auto (cada 15s)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "15",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 160,
+        "wires": [
+            [
+                "generar_uplink"
+            ]
+        ]
+    },
+    {
+        "id": "generar_uplink",
+        "type": "function",
+        "z": "tab_emisor",
+        "name": "📡 Generar Uplink LoRaWAN",
+        "func": "// ============================================\n// GENERADOR DE UPLINKS LORAWAN PARA CHIRPSTACK\n// Formato: [Temp_H][Temp_L][Hum][Pres_H][Pres_L][Bat]\n// 6 bytes totales\n// ============================================\n\nfunction bytesToHex(bytes) {\n    return bytes.map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();\n}\n\nfunction generarDatosSensor() {\n    // Temperatura: 20 a 35°C (2 bytes, signed, x100)\n    const temperatura = 20 + Math.random() * 15;\n    const tempInt = Math.round(temperatura * 100);\n    const tempBytes = [\n        (tempInt >> 8) & 0xFF,\n        tempInt & 0xFF\n    ];\n    \n    // Humedad: 40-70% (1 byte)\n    const humedad = Math.round(40 + Math.random() * 30);\n    \n    // Presión: 950-1000 hPa (2 bytes)\n    const presion = Math.round(950 + Math.random() * 50);\n    const presionBytes = [\n        (presion >> 8) & 0xFF,\n        presion & 0xFF\n    ];\n    \n    // Voltaje batería: 3.5-4.0V (1 byte, x100, offset 200)\n    const voltaje = 3.5 + Math.random() * 0.5;\n    const voltajeByte = Math.round((voltaje * 100) - 200);\n    \n    return {\n        bytes: [...tempBytes, humedad, ...presionBytes, voltajeByte],\n        valores: {\n            temperatura: temperatura.toFixed(2),\n            humedad: humedad,\n            presion: presion,\n            voltaje: voltaje.toFixed(2)\n        }\n    };\n}\n\nconst sensorData = generarDatosSensor();\nconst payloadHex = bytesToHex(sensorData.bytes);\nconst timestamp = new Date().toISOString();\n\nconst devEUI = \"70B3D57ED005ABCD\";\nconst gatewayID = \"2C7F71115310007\";\nconst fPort = 1;\nconst fCnt = flow.get('frameCounter') || 1;\nflow.set('frameCounter', fCnt + 1);\n\n// Estructura compatible con ChirpStack Gateway Bridge\n// Formato Semtech UDP simulado\nconst phyPayload = Buffer.from(payloadHex, 'hex').toString('base64');\n\nmsg.payload = {\n    devEUI: devEUI,\n    gatewayID: gatewayID,\n    fPort: fPort,\n    fCnt: fCnt,\n    phyPayload: phyPayload,\n    payloadHex: payloadHex,\n    valoresReales: sensorData.valores,\n    rxInfo: {\n        rssi: -45 - Math.round(Math.random() * 40),\n        snr: 5 + Math.random() * 5,\n        frequency: 915200000,\n        dr: 3,\n        timestamp: Math.floor(Date.now() / 1000)\n    },\n    timestamp: timestamp\n};\n\nnode.warn(`📡 Uplink #${fCnt}: ${payloadHex} (${sensorData.bytes.length} bytes)`);\nnode.warn(`📊 T=${sensorData.valores.temperatura}°C, H=${sensorData.valores.humedad}%, P=${sensorData.valores.presion}hPa, V=${sensorData.valores.voltaje}V`);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 130,
+        "wires": [
+            [
+                "mqtt_publicar_gateway",
+                "debug_emisor"
+            ]
+        ]
+    },
+    {
+        "id": "mqtt_publicar_gateway",
+        "type": "mqtt out",
+        "z": "tab_emisor",
+        "name": "📤 Publicar en Gateway Topic",
+        "topic": "us915/gateway/2C7F71115310007/event/up",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "mqtt_chirpstack",
+        "x": 670,
+        "y": 130,
+        "wires": []
+    },
+    {
+        "id": "debug_emisor",
+        "type": "debug",
+        "z": "tab_emisor",
+        "name": "👁 Ver Uplink Generado",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 670,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "comment_emisor",
+        "type": "comment",
+        "z": "tab_emisor",
+        "name": "EMISOR: Simula dispositivo LoRaWAN enviando datos. Los datos se publican en: us915/gateway/2C7F71115310007/event/up",
+        "info": "",
+        "x": 420,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "tab_receptor",
+        "type": "tab",
+        "label": "RECEPTOR: Decodificación de ChirpStack",
+        "disabled": false,
+        "info": "Este flujo recibe uplinks DECODIFICADOS que vienen de ChirpStack.\nChirpStack ejecuta el Codec JavaScript y publica el resultado decodificado."
+    },
+    {
+        "id": "mqtt_recibir_decoded",
+        "type": "mqtt in",
+        "z": "tab_receptor",
+        "name": "📥 Recibir Uplink Decodificado",
+        "topic": "application/1/device/70B3D57ED005ABCD/event/up",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "mqtt_chirpstack",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 120,
+        "wires": [
+            [
+                "extraer_datos"
+            ]
+        ]
+    },
+    {
+        "id": "extraer_datos",
+        "type": "function",
+        "z": "tab_receptor",
+        "name": "📋 Extraer Datos Decodificados",
+        "func": "// ============================================\n// EXTRACTOR DE DATOS DECODIFICADOS POR CHIRPSTACK\n// ChirpStack ya ejecutó el Codec JavaScript\n// Solo extraemos los datos relevantes\n// ============================================\n\ntry {\n    const uplink = msg.payload;\n    \n    // ChirpStack publica la estructura decodificada\n    // El campo 'data' contiene los valores decodificados por el Codec\n    \n    const data = uplink.data || {};\n    const deviceInfo = uplink.deviceInfo || {};\n    const rxInfo = uplink.rxInfo || {};\n    \n    msg.payload = {\n        // Información del dispositivo\n        devEUI: uplink.devEUI || \"N/A\",\n        deviceName: deviceInfo.deviceName || \"N/A\",\n        applicationID: uplink.applicationID || \"N/A\",\n        \n        // Datos DECODIFICADOS por ChirpStack\n        data: {\n            temperatura: data.temperatura || null,\n            humedad: data.humedad || null,\n            presion: data.presion || null,\n            voltaje: data.voltaje || null,\n            alerta: data.alerta || \"N/A\"\n        },\n        \n        // Metadatos\n        metadata: {\n            fPort: uplink.fPort,\n            fCnt: uplink.fCnt,\n            confirmed: uplink.confirmed || false,\n            rssi: rxInfo.rssi || null,\n            snr: rxInfo.snr || null,\n            frequency: rxInfo.frequency || null\n        },\n        \n        // Estado\n        estatus: \"exito\",\n        timestamp: new Date().toISOString(),\n        \n        // Mensaje informativo\n        mensaje: `${uplink.devEUI}: T=${data.temperatura}°C, H=${data.humedad}%, P=${data.presion}hPa, V=${data.voltaje}V - ${data.alerta}`\n    };\n    \n    node.warn(`✅ Datos decodificados por ChirpStack: T=${data.temperatura}°C`);\n    \n    return msg;\n    \n} catch (error) {\n    node.error(`❌ Error al extraer datos: ${error.message}`);\n    \n    msg.payload = {\n        estatus: \"error\",\n        timestamp: new Date().toISOString(),\n        errores: [error.message],\n        mensaje: \"Error al procesar uplink decodificado\"\n    };\n    \n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 120,
+        "wires": [
+            [
+                "debug_completo",
+                "debug_datos_limpios",
+                "status_node"
+            ]
+        ]
+    },
+    {
+        "id": "debug_completo",
+        "type": "debug",
+        "z": "tab_receptor",
+        "name": "📊 Salida Completa",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "debug_datos_limpios",
+        "type": "debug",
+        "z": "tab_receptor",
+        "name": "📈 Solo Datos Decodificados",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.data",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "status_node",
+        "type": "function",
+        "z": "tab_receptor",
+        "name": "🟢 Estado Visual",
+        "func": "// Cambiar color del nodo según el estado\nconst estatus = msg.payload.estatus;\n\nif (estatus === \"exito\") {\n    node.status({\n        fill: \"green\",\n        shape: \"dot\",\n        text: `✅ EXITO - ${msg.payload.data.temperatura}°C`\n    });\n} else {\n    node.status({\n        fill: \"red\",\n        shape: \"dot\",\n        text: `❌ ERROR`\n    });\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "comment_receptor",
+        "type": "comment",
+        "z": "tab_receptor",
+        "name": "RECEPTOR: Recibe datos DECODIFICADOS de ChirpStack. El Codec JavaScript ya ejecutó. Estos son los valores finales listos para usar.",
+        "info": "",
+        "x": 440,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "mqtt_chirpstack",
+        "type": "mqtt-broker",
+        "name": "ChirpStack Mosquitto",
+        "broker": "chirpstack-docker-mosquitto-1",
+        "port": "1883",
+        "clientid": "nodered-lab3-client",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]

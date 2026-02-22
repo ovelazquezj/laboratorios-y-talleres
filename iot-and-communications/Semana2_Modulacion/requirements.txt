@@ -1,0 +1,25 @@
+# Semana 2: Modulación y Demodulación Digital en Canales AWGN
+# Dependencias de Python requeridas
+
+# Computación numérica
+numpy>=1.21.0
+
+# Visualización y gráficas
+matplotlib>=3.5.0
+
+# Procesamiento de señales
+scipy>=1.7.0
+
+# Análisis de datos y exportación CSV
+pandas>=1.3.0
+
+# Opcional: Jupyter para notebooks locales
+# jupyter>=1.0.0
+
+# Opcional: Para usar en Google Colab (ya incluido)
+# google-colab
+
+# Notas de compatibilidad:
+# - Python 3.9+ requerido
+# - Todas las dependencias son compatibles con Google Colab
+# - Las versiones especificadas son mínimas para funcionalidad completa

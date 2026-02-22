@@ -1,0 +1,46 @@
+# Archivo environment.yml para Osciloscopio Digital
+# Laboratorio: Modulación Digital en Canales Gaussianos
+# Uso: conda env create -f environment.yml
+
+name: osciloscopio-digital
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  # Python versión estable
+  - python=3.10
+
+  # Paquetes científicos fundamentales
+  - numpy=1.24.*
+  - scipy=1.10.*
+  - matplotlib=3.7.*
+
+  # Paquetes adicionales para análisis avanzado
+  - pandas=2.0.*
+  - scikit-learn=1.3.*
+
+  # Herramientas de desarrollo y debugging
+  - ipython=8.14.*
+  - jupyter=1.0.*
+
+  # Paquetes de interfaz y widgets (para interactividad mejorada)
+  - ipywidgets=8.0.*
+
+  # Paquetes de sistema y compatibilidad
+  - pip=23.*
+
+  # Dependencias vía pip (paquetes no disponibles en conda o versiones específicas)
+  - pip:
+    # No se requieren paquetes adicionales via pip
+    # matplotlib ya incluye los widgets necesarios
+
+# Variables de entorno opcionales
+variables:
+  PYTHONPATH: $CONDA_PREFIX/lib/python3.10/site-packages
+  
+# Configuración post-instalación (comandos opcionales)
+# Ejecutar después de crear el entorno:
+# conda activate osciloscopio-digital
+# python -c "import matplotlib.pyplot as plt; print('Entorno configurado correctamente')"

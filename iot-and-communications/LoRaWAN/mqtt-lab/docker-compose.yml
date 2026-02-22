@@ -1,0 +1,12 @@
+version: '3'
+services:
+  mqtt-explorer:
+    image: smeagolworms4/mqtt-explorer
+    container_name: mqtt-explorer
+    ports:
+      - "9001:9001"
+    environment:
+      - HTTP_PORT=9001
+    volumes:
+      - ./config:/mqtt-explorer/config
+

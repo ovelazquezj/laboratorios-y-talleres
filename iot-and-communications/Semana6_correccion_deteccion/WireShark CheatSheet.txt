@@ -1,0 +1,100 @@
+CheatSheet Wireshark
+##############
+# Colores
+##############
+Verde claro: Tráfico HTTP, que es parte de la comunicación web. 
+Azul claro: Tráfico TCP, como la solicitud de una conexión o un paquete de respuesta, aunque algunas fuentes lo asocian con tráfico UDP. 
+Morado claro: Tráfico TCP. 
+Rojo: Indica errores o problemas serios, como paquetes malformados o problemas de seguridad. 
+Amarillo: Puede indicar advertencias o problemas de conexión. 
+Cian: Información sobre errores usuales que no son críticos. 
+Gris oscuro: Tráfico relacionado con la conexión TCP, como los paquetes SYN y FIN. 
+
+============================================================
+HOJA DE TRUCOS DE FILTROS PARA LABORATORIO DE SEGURIDAD
+(Wireshark Display Filters)
+SOLO PARA LOCALHOST
+============================================================
+OBJETIVO: AISLAR TRÁFICO EN RED LOCAL (LOOPBACK O IP LOCAL)
+---
+SECCIÓN 0: COMPARACIÓN CLAVE: INSEGURO vs. SEGURO
+---
+0a. Tráfico HTTP al Sitio Inseguro (EJEMPLO DE EXPOSICIÓN):
+   Filtro: http and host p19031.fortiddns.com and tcp.port == 8088
+   Descripción: Aísla las peticiones y respuestas HTTP (texto plano) hacia/desde el servidor externo. Aquí el contenido de los datos (POST, credenciales) es VISIBLE.
+
+0b. Tráfico HTTPS a un Sitio Seguro (EJEMPLO DE CIFRADO):
+   Filtro: tls and host google.com
+   Descripción: Aísla el tráfico cifrado (TLS/SSL) hacia Google. Al examinar los paquetes, la capa de aplicación (HTTP) NO será visible, solo el tráfico cifrado.
+
+---
+SECCIÓN 1: SERVIDOR WEB (NGINX)
+---
+1. Tráfico HTTP (Texto Plano - INSEGURO):
+   Filtro: http
+   Descripción: Muestra todo el tráfico de las peticiones y respuestas HTTP (puerto 80 por defecto). Aquí es donde se verá la exposición de datos.
+
+2. Tráfico HTTPS (Cifrado - SEGURO):
+   Filtro: tls or ssl
+   Descripción: Muestra todo el tráfico cifrado (TLS/SSL), que se utiliza para HTTPS (puerto 443 por defecto). Los datos de la aplicación no serán legibles.
+
+3. Tráfico Web a Puertos Específicos (80 y 443):
+   Filtro: tcp.port == 80 or tcp.port == 443
+   Descripción: Muestra toda la comunicación hacia o desde los puertos web estándar, útil si no sabe si es HTTP o HTTPS.
+
+---
+SECCIÓN 2: MQTT Y CHIRPSTACK (IoT)
+---
+4. Tráfico MQTT (Broker de Mensajería):
+   Filtro: mqtt
+   Descripción: Muestra solo los paquetes que Wireshark identifica como protocolo MQTT (utiliza el puerto 1883 por defecto).
+
+5. Tráfico MQTT Cifrado (MQTTS):
+   Filtro: mqtt or tls
+   Descripción: Muestra mensajes MQTT y todo el tráfico cifrado (incluyendo el tráfico MQTTS que usa TLS/SSL, típicamente en el puerto 8883).
+
+6. Tráfico a Puerto Estándar de MQTT (1883):
+   Filtro: tcp.port == 1883
+   Descripción: Útil si el tráfico MQTT no es detectado automáticamente por el analizador de protocolo de Wireshark.
+
+---
+SECCIÓN 3: FILTROS AVANZADOS / LOCALES
+---
+7. Tráfico en la Interfaz Loopback (IP Local):
+   Filtro: ip.addr == 127.0.0.1
+   Descripción: Muestra solo el tráfico que sale y entra a la dirección IP local de loopback. Esencial si Nginx y ChirpStack se comunican solo internamente.
+
+8. Filtrar por un Tipo de Paquete y Dominio Específico:
+   Filtro: http.request and ip.addr == 127.0.0.1
+   Descripción: Muestra solo las solicitudes HTTP salientes dirigidas a la IP local (127.0.0.1).
+============================================================
+
+========================================================================
+EXTENDIDO A LA RED LOCAL
+========================================================================
+
+OBJETIVO: AISLAR COMUNICACIÓN ENTRE NODOS Y DEMOSTRAR PROTOCOLOS SEGUROS/INSEGUROS.
+------------------------------------------------------------------------
+SECCIÓN 0: COMPARACIÓN CLAVE: PROTOCOLOS EXTERNOS (HTTP vs. HTTPS)
+------------------------------------------------------------------------
+| ESCENARIO | FILTRO DE VISUALIZACIÓN | DESCRIPCIÓN Y NOTA CLAVE |
+|------------------------------------|------------------------------------------|------------------------------------------|
+| 0a. HTTP Inseguro (Exposición) | http and host p19031.fortiddns.com and tcp.port == 8088 | Muestra el tráfico HTTP externo. Buscar datos en TEXTO PLANO. |
+| 0b. HTTPS Seguro (Cifrado) | tls and host google.com | Muestra el tráfico TLS/SSL. El contenido de la aplicación estará ILEGIBLE. |
+------------------------------------------------------------------------
+SECCIÓN 1: SERVICIOS Y TRÁFICO ENTRE NODOS DEL LABORATORIO
+------------------------------------------------------------------------
+| ESCENARIO | FILTRO DE VISUALIZACIÓN | DESCRIPCIÓN Y NOTA CLAVE |
+|------------------------------------|------------------------------------------|------------------------------------------|
+| 1. HTTP Local (INSEGURO) | http and host 192.168.1.50 | Captura todo el tráfico HTTP (texto plano) del servidor web local (reemplazar IP). |
+| 2. SSH (Conexión Cifrada) | ssh and host 192.168.1.50 | **Ejemplo de Seguridad.** Muestra el tráfico SSH (puerto 22). Los comandos y contraseñas estarán CIFRADOS. |
+| 3. Solicitudes POST | http.request.method == "POST" | Aísla los envíos de formularios HTTP (dónde van las credenciales expuestas). |
+| 4. Tráfico Específico A <-> B | ip.addr == 192.168.1.50 and ip.addr == 192.168.1.60 | Aísla la comunicación SÓLO entre la Máquina A y la Máquina B. |
+------------------------------------------------------------------------
+SECCIÓN 2: TRÁFICO DE IoT (MQTT/CHIRPSTACK LOCAL)
+------------------------------------------------------------------------
+| ESCENARIO | FILTRO DE VISUALIZACIÓN | DESCRIPCIÓN Y NOTA CLAVE |
+|------------------------------------|------------------------------------------|------------------------------------------|
+| 5. MQTT (Texto Plano) | mqtt and host 192.168.1.60 | Muestra los mensajes MQTT (no cifrados) hacia o desde el broker local (reemplazar IP). |
+| 6. MQTT (Cifrado - MQTTS) | mqtt or tls and host 192.168.1.60 | Muestra tanto los paquetes MQTT como los paquetes TLS/SSL para el broker. |
+------------------------------------------------------------------------

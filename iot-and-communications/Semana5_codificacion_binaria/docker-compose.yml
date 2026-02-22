@@ -1,0 +1,22 @@
+#version: '3.8'
+
+services:
+  emisor:
+    build:
+      context: ./emisor
+    ports:
+      - "8000:8000"
+    networks:
+      - red_binaria
+
+  receptor:
+    build:
+      context: ./receptor
+    ports:
+      - "8001:8000"
+    networks:
+      - red_binaria
+
+networks:
+  red_binaria:
+    driver: bridge

@@ -1,0 +1,13 @@
+name: resonancia_ondas
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - numpy=1.24.3
+  - scipy=1.11.1
+  - matplotlib=3.7.1
+  - pyaudio=0.2.11
+  - pip=23.1.2
+  - pip:
+    - sounddevice==0.4.6

@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='utf-8'?>
+<scheme version="2.0" title="" description="">
+	<nodes>
+		<node id="0" name="Pubmed" qualified_name="orangecontrib.text.widgets.owpubmed.OWPubmed" project_name="Orange3-Text" version="" title="Pubmed" position="(93.0, 159.0)" />
+		<node id="1" name="Corpus Viewer" qualified_name="orangecontrib.text.widgets.owcorpusviewer.OWCorpusViewer" project_name="Orange3-Text" version="" title="Corpus Viewer" position="(213.0, 123.0)" />
+		<node id="2" name="Preprocess Text" qualified_name="orangecontrib.text.widgets.owpreprocess.OWPreprocess" project_name="Orange3-Text" version="" title="Preprocess Text" position="(209.0, 202.0)" />
+		<node id="3" name="Bag of Words" qualified_name="orangecontrib.text.widgets.owbagofwords.OWTBagOfWords" project_name="Orange3-Text" version="" title="Bag of Words" position="(293.0, 233.0)" />
+		<node id="4" name="Topic Modelling" qualified_name="orangecontrib.text.widgets.owtopicmodeling.OWTopicModeling" project_name="Orange3-Text" version="" title="Topic Modelling" position="(389.0, 198.0)" />
+		<node id="5" name="Distances" qualified_name="Orange.widgets.unsupervised.owdistances.OWDistances" project_name="Orange3" version="" title="Distances" position="(399.0, 306.0)" />
+		<node id="6" name="Hierarchical Clustering" qualified_name="Orange.widgets.unsupervised.owhierarchicalclustering.OWHierarchicalClustering" project_name="Orange3" version="" title="Hierarchical Clustering" position="(488.0, 312.0)" />
+	</nodes>
+	<links>
+		<link id="0" source_node_id="0" sink_node_id="1" source_channel="Corpus" sink_channel="Corpus" enabled="true" source_channel_id="corpus" sink_channel_id="corpus" />
+		<link id="1" source_node_id="0" sink_node_id="2" source_channel="Corpus" sink_channel="Corpus" enabled="true" source_channel_id="corpus" sink_channel_id="corpus" />
+		<link id="2" source_node_id="2" sink_node_id="3" source_channel="Corpus" sink_channel="Corpus" enabled="true" source_channel_id="corpus" sink_channel_id="corpus" />
+		<link id="3" source_node_id="3" sink_node_id="4" source_channel="Corpus" sink_channel="Corpus" enabled="true" source_channel_id="corpus" sink_channel_id="corpus" />
+		<link id="4" source_node_id="3" sink_node_id="5" source_channel="Corpus" sink_channel="Data" enabled="true" source_channel_id="corpus" sink_channel_id="data" />
+		<link id="5" source_node_id="5" sink_node_id="6" source_channel="Distances" sink_channel="Distances" enabled="true" source_channel_id="distances" sink_channel_id="distances" />
+	</links>
+	<annotations />
+	<thumbnail />
+	<node_properties>
+		<properties node_id="0" format="literal">{'author': 'Kosmyna', 'controlAreaVisible': True, 'includes_abstract': True, 'includes_authors': True, 'includes_mesh': True, 'includes_title': True, 'includes_url': True, 'last_advanced_query': '', 'num_records': 0, 'pub_date_from': '2025-01-01', 'pub_date_to': '2025-06-27', 'recent_keywords': ['orchid', 'hypertension', 'blood pressure', 'radiology'], 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x02\x05\x00\x00\x00z\x00\x00\x030\x00\x00\x02\x94\x00\x00\x02\x06\x00\x00\x00\x98\x00\x00\x03/\x00\x00\x02\x93\x00\x00\x00\x00\x00\x00\x00\x00\x05\x00\x00\x00\x02\x06\x00\x00\x00\x98\x00\x00\x03/\x00\x00\x02\x93', '__version__': 1}</properties>
+		<properties node_id="1" format="pickle">gASV0wAAAAAAAAB9lCiMCmF1dG9jb21taXSUiIwSY29udHJvbEFyZWFWaXNpYmxllIiME3NhdmVk
+V2lkZ2V0R2VvbWV0cnmUQ0IB2dDLAAMAAAAAB37////dAAAMgQAAAqEAAAeAAAAAFgAADH8AAAKf
+AAAAAQIAAAAFAAAAB4AAAAAWAAAMfwAAAp+UjBJzZWxlY3RlZF9kb2N1bWVudHOUj5QoSwCQjAtz
+aG93X3Rva2Vuc5SJjAtfX3ZlcnNpb25fX5RLAowQY29udGV4dF9zZXR0aW5nc5RdlHUu
+</properties>
+		<properties node_id="2" format="pickle">gASVQAQAAAAAAAB9lCiMCmF1dG9jb21taXSUiIwSY29udHJvbEFyZWFWaXNpYmxllIiME3NhdmVk
+V2lkZ2V0R2VvbWV0cnmUQ0IB2dDLAAMAAAAAANoAAAAAAAAEJQAAAu8AAADbAAAAHgAABCQAAALu
+AAAAAAAAAAAFAAAAANsAAAAeAAAEJAAAAu6UjA5zdG9yZWRzZXR0aW5nc5R9lCiMBG5hbWWUjACU
+jA1wcmVwcm9jZXNzb3JzlF2UKIwTcHJlcHJvY2Vzcy50b2tlbml6ZZR9lIaUjBRwcmVwcm9jZXNz
+LnRyYW5zZm9ybZR9lIwHbWV0aG9kc5RdlChLAEsBSwJLA2VzhpSMFHByZXByb2Nlc3Mubm9ybWFs
+aXpllH2UhpSMEXByZXByb2Nlc3MuZmlsdGVylH2UKIwHYWJzX2VuZJRLCowJYWJzX3N0YXJ0lEsB
+jAlmcmVxX3R5cGWUSwCMCGluY2xfbnVtlImMC2ludmFsaWRhdGVklEc/5wMobqTPpowHbHhfbGlz
+dJRdlIwHbHhfcGF0aJROjAdtZXRob2RzlF2UKEsASwJljAhuX3Rva2Vuc5RLZIwHcGF0dGVybpSM
+W1wufCx8Onw7fCF8XD98XCh8XCl8XHx8XCt8XCd8XCJ84oCYfOKAmXzigJx84oCdfFwnfFzigJl8
+4oCmfFwtfOKAk3zigJR8XCR8JnxcKnw+fDx8XC98XFt8XF2UjAhwb3NfdGFnc5SMCU5PVU4sVkVS
+QpSMB3JlbF9lbmSURz/szMzMzMzNjAlyZWxfc3RhcnSURz+5mZmZmZmajAdzd19saXN0lF2UjB5v
+cmFuZ2V3aWRnZXQudXRpbHMuZmlsZWRpYWxvZ3OUjApSZWNlbnRQYXRolJOUKYGUfZQojAdhYnNw
+YXRolIxtQzovVXNlcnMvb3ZlbGEvT25lRHJpdmUvRGVza3RvcC9DSURSSUFfUFJPSkVDVC9Db25m
+ZXJlbmNpYXMgeSBjdXJzb3MvQ3Vyc29zL0RhdGEgTGl0ZXJhY3kvZGF0b3Mvc3RvcHdvcmRzLnR4
+dJSMBnByZWZpeJSMB2Jhc2VkaXKUjAdyZWxwYXRolIwTZGF0b3Mvc3RvcHdvcmRzLnR4dJSMBXRp
+dGxllGgIjAVzaGVldJRoCIwLZmlsZV9mb3JtYXSUTnViYYwHc3dfcGF0aJRoLSmBlH2UKGgwjG1D
+Oi9Vc2Vycy9vdmVsYS9PbmVEcml2ZS9EZXNrdG9wL0NJRFJJQV9QUk9KRUNUL0NvbmZlcmVuY2lh
+cyB5IGN1cnNvcy9DdXJzb3MvRGF0YSBMaXRlcmFjeS9kYXRvcy9zdG9wd29yZHMudHh0lGgyaDNo
+NIwTZGF0b3Mvc3RvcHdvcmRzLnR4dJRoNmgIaDdoCGg4TnVidYaUjAd0YWcucG9zlH2UhpRldYwL
+X192ZXJzaW9uX1+USwR1Lg==
+</properties>
+		<properties node_id="3" format="literal">{'autocommit': True, 'controlAreaVisible': True, 'hidden_cb': True, 'normalization': 'L2 (Euclidean)', 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x01\xf1\x00\x00\x00\xe9\x00\x00\x03\x0f\x00\x00\x01\xe9\x00\x00\x01\xf2\x00\x00\x01\x07\x00\x00\x03\x0e\x00\x00\x01\xe8\x00\x00\x00\x00\x00\x00\x00\x00\x05\x00\x00\x00\x01\xf2\x00\x00\x01\x07\x00\x00\x03\x0e\x00\x00\x01\xe8', 'wglobal': 'Smooth IDF', 'wlocal': 'Count', '__version__': 1}</properties>
+		<properties node_id="4" format="literal">{'autocommit': True, 'controlAreaVisible': True, 'method_index': 0, 'savedWidgetGeometry': None, 'selection': None, 'hdp': {'K': 15, 'T': 150, 'alpha': 1, 'eta': 0.01, 'gamma': 1, 'kappa': 1, 'tau': 64}, 'lda': {'num_topics': 10}, 'lsi': {'num_topics': 10}, 'nmf': {'num_topics': 10}, '__version__': 2, 'context_settings': []}</properties>
+		<properties node_id="5" format="literal">{'autocommit': True, 'axis': 1, 'controlAreaVisible': True, 'metric_id': 8, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\xff\xff\xfca\x00\x00\x02.\xff\xff\xfd\xaa\x00\x00\x03\x82\xff\xff\xfcb\x00\x00\x02C\xff\xff\xfd\xa9\x00\x00\x03\x81\x00\x00\x00\x01\x00\x00\x00\x00\x04\x1a\xff\xff\xfcb\x00\x00\x02C\xff\xff\xfd\xa9\x00\x00\x03\x81', '__version__': 4}</properties>
+		<properties node_id="6" format="literal">{'annotation_if_enumerate': 'Enumeration', 'annotation_if_names': 'Name', 'autocommit': True, 'controlAreaVisible': True, 'cut_ratio': 75.0, 'label_only_subset': False, 'linkage': 4, 'max_depth': 10, 'pruning': 0, 'savedWidgetGeometry': None, 'selection_method': 0, 'top_n': 3, 'zoom_factor': 0, '__version__': 2, '__session_state_data': {'version': (0, 0, 0)}, 'context_settings': []}</properties>
+	</node_properties>
+	<session_state>
+		<window_groups />
+	</session_state>
+</scheme>

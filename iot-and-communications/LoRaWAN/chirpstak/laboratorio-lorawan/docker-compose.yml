@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # MOSQUITTO MQTT BROKER
+  # ============================================
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: laboratorio-mosquitto
+    restart: unless-stopped
+    ports:
+      - "1885:1885"      # MQTT
+      - "9001:9001"      # WebSocket
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    networks:
+      - lorawan-lab
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/#", "-C", "1", "-i", "healthcheck", "-W", "3"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ============================================
+  # NODE-RED
+  # ============================================
+  nodered:
+    image: nodered/node-red:latest
+    container_name: laboratorio-nodered
+    restart: unless-stopped
+    ports:
+      - "1880:1880"      # Node-RED UI
+    environment:
+      - TZ=America/Mexico_City
+      - NODE_OPTIONS=--max_old_space_size=4096
+    volumes:
+      - ./nodered-data:/data
+      - ./flow_completo_lorawan.json:/data/flows-import.json:ro
+    networks:
+      - lorawan-lab
+    depends_on:
+      - mosquitto
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1880"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  lorawan-lab:
+    driver: bridge
+    name: lorawan-lab-network
+
+volumes:
+  nodered-data:
+    name: laboratorio-nodered-data
+  mosquitto-data:
+    name: laboratorio-mosquitto-data
