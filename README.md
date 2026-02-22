@@ -2,7 +2,7 @@
 
 > **Note:** All course materials, lab guides, and workshop documents in this repository are written in **Spanish**, as they are designed for Spanish-speaking university students.
 
-This repository contains laboratory and workshop materials for university courses taught by Omar Francisco Velazquez Juarez. The content covers engineering topics including embedded systems, IoT communications, event-driven programming, computer vision, and natural language processing.
+This repository contains laboratory and workshop materials for university courses taught by Omar Francisco Velazquez Juarez. The content covers engineering topics including embedded systems, IoT communications, event-driven programming, data structures, compiler design, computer vision, and natural language processing.
 
 ---
 
@@ -10,15 +10,17 @@ This repository contains laboratory and workshop materials for university course
 
 ```
 laboratorios-y-talleres/
-├── embeded-systems/          # Embedded systems labs (ESP32, Arduino IDE, Wokwi)
-├── iot-and-communications/   # IoT & communications labs (LoRaWAN, ChirpStack, MQTT)
-├── POE/                      # Event-driven programming labs (React, Tkinter)
-├── computer-vision/          # Computer vision notebooks (MRI tumor classification)
-├── NLP/                      # Natural language processing (BERT, Orange)
-├── sdd-for-claude-code/      # Software design documentation templates
-├── Systems_architecture/     # Systems architecture (in progress)
-├── LICENSE                   # CC BY 4.0 License
-└── README.md                 # This file
+├── embeded-systems/                  # Embedded systems labs (ESP32, Arduino IDE, Wokwi)
+├── iot-and-communications/           # IoT & communications labs (LoRaWAN, ChirpStack, MQTT)
+├── POE/                              # Event-driven programming labs (React, Tkinter)
+│   └── proyecto_final-control-mision-poc/  # Final project: Mission Control Dashboard
+├── data-structures_etcompilers/      # Data structures & compiler design labs (MiniGUs)
+├── computer-vision/                  # Computer vision notebooks (MRI tumor classification)
+├── NLP/                              # Natural language processing (BERT, Orange)
+├── sdd-for-claude-code/              # Software design documentation templates
+├── Systems_architecture/             # Systems architecture (in progress)
+├── LICENSE                           # CC BY 4.0 License
+└── README.md                         # This file
 ```
 
 ---
@@ -55,6 +57,20 @@ Topics include:
 - Week 2 — Event programming with VS Code debugging
 - Week 3 — Modular architecture: objects, controls, and components
 - Week 4 — Application structure with logging, error handling, and assertions
+- **Final Project** (`proyecto_final-control-mision-poc/`) — Mission Control Dashboard: full-stack app with React (TypeScript) + FastAPI + SQLite, documented via SRS
+
+### Data Structures & Compiler Design (`data-structures_etcompilers/`)
+**Course:** Estructuras de Datos y Compiladores
+Hands-on labs building a didactic compiler (MiniGUs) in Python, incrementally adding stages from lexer to code generation. Topics include:
+- EXP0 — Lexer: tokenization and lexical analysis (Python, NASM, Docker)
+- EXP1 — Parser: recursive descent parser for arithmetic expressions
+- EXP2 — Arrays and matrices (Jupyter notebooks)
+- EXP3 — AST and hash tables applied to flight control simulation
+- EXP4 — Linked lists and symbol tables
+- EXP5 — Terminal text editor in C (`guT`) using `ncurses`; lab guide for WSL/GCC
+- EXP9 — Process queue simulator
+- EXP1010 — Advanced lexer analysis lab
+- EXP1011 — Symbol tables, nested scopes, and shadowing in MiniGUS
 
 ### Computer Vision (`computer-vision/`)
 Jupyter notebook for brain tumor MRI classification using machine learning (CNN/deep learning).
